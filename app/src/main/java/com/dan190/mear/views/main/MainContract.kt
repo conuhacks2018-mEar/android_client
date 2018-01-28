@@ -1,5 +1,7 @@
 package com.dan190.mear.views.main
 
+import android.database.Cursor
+import com.dan190.mear.data.Alarm
 import com.dan190.mear.mvp.BaseMvpPresenter
 import com.dan190.mear.mvp.BaseMvpView
 
@@ -8,12 +10,16 @@ import com.dan190.mear.mvp.BaseMvpView
  */
 interface MainContract {
     interface View : BaseMvpView {
-//        fun showListOfAlarms()
+        fun showListOfAlarms(alarmList: List<Alarm>)
+
+        fun hideLoading()
+
+        fun showLoading()
     }
 
     interface Presenter : BaseMvpPresenter<View> {
         fun testBackgroundUpdate()
 
-        fun loadAllAlarms()
+        fun loadAllAlarms(cursor: Cursor?)
     }
 }

@@ -7,9 +7,8 @@ import net.simonvt.schematic.annotation.*
  */
 class AlarmColumns {
     companion object {
-        @DataType(DataType.Type.INTEGER)
+        @DataType(DataType.Type.TEXT)
         @PrimaryKey(onConflict = ConflictResolutionType.REPLACE)
-        @AutoIncrement
         const val COLUMN_ID = "_id"
 
         @DataType(DataType.Type.TEXT)

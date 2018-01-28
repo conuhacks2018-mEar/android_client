@@ -44,7 +44,7 @@ object MyNotification {
 
     fun createNotification(context: Context?, title: String?, text: String?) {
         val builder = context?.let { NotificationCompat.Builder(it, it.getString(R.string.mear_channel_id)!!) }
-        builder?.setSmallIcon(R.drawable.announcement)
+        builder?.setSmallIcon(R.drawable.logo)
                 ?.setContentTitle(title)
                 ?.setContentText(text)
 

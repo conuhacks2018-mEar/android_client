@@ -11,7 +11,7 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/image"
+            android:id="@+id/alertImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -20,6 +20,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/date"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/announcement"
             app:srcCompat="@drawable/announcement" />
 
         <TextView
@@ -30,7 +31,7 @@
             android:text="TextView"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toRightOf="@+id/image"
+            app:layout_constraintLeft_toRightOf="@+id/alertImage"
             tools:layout_editor_absoluteX="89dp" />
 
         <TextView

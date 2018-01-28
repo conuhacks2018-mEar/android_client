@@ -1,20 +1,36 @@
 package com.dan190.mear.views.main
 
-import com.dan190.mear.R
-import com.dan190.mear.data.MyAlarm
+import android.content.ContentValues
+import android.database.Cursor
+import com.dan190.mear.data.Alarm
+import com.dan190.mear.MyApplication
+import com.dan190.mear.data.contentProvider.AlarmColumns
+import com.dan190.mear.data.contentProvider.AlarmProviderJava
 import com.dan190.mear.mvp.BaseMvpPresenterImpl
 import com.dan190.mear.services.MyNotification
-import com.google.firebase.database.*
-import io.realm.Realm
+import com.google.firebase.database.ChildEventListener
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
 import rx.Observable
-import rx.schedulers.Schedulers
 import timber.log.Timber
+import java.math.BigDecimal
+import java.util.concurrent.TimeUnit
 
 /**
  * Created by Dan on 27/01/2018.
  */
-class MainPresenter : BaseMvpPresenterImpl<MainContract.View>(), MainContract.Presenter {
-    val database = FirebaseDatabase.getInstance()
+class MainPresenter :
+        BaseMvpPresenterImpl<MainContract.View>(),
+        MainContract.Presenter {
+
+
+    private val database = FirebaseDatabase.getInstance()
+
+    private val COL_ID = 0
+    private val COL_TITLE = 1
+    private val COL_MESSAGE = 2
+    private val COL_DATE = 3
 
     override fun testBackgroundUpdate() {
         val testRef = database.getReference("policeNotification")
@@ -34,9 +50,25 @@ class MainPresenter : BaseMvpPresenterImpl<MainContract.View>(), MainContract.Pr
             }
 
             override fun onChildAdded(dataSnapShot: DataSnapshot?, p1: String?) {
-                Timber.d("Child added")
                 val label = dataSnapShot?.child("label")?.getValue(String::class.java)
                 Timber.d("The label for this one is $label")
+                val probability = dataSnapShot?.child("label_prob")?.getValue(String::class.java)
+                val id = dataSnapShot?.child("wav_id")?.getValue(String::class.java)
+                val roundedProbability = probability?.toDouble()?.cutTo2DecimalPlaces()?.times(100)
+                val notification = ContentValues()
+                val title = "$label detected!!"
+                val message = "A $label has been detected with $roundedProbability % chance"
+                notification.put(AlarmColumns.COLUMN_ID, id)
+                notification.put(AlarmColumns.COLUMN_TITLE, title)
+                notification.put(AlarmColumns.COLUMN_MESSAGE, message)
+                notification.put(AlarmColumns.COLUMN_DATE, System.currentTimeMillis())
+                MyApplication.getInstance().contentResolver.insert(AlarmProviderJava.AlarmMessages.CONTENT_URI, notification)
+
+                // create notification
+                MyNotification.createNotification(view?.getContext(), title, message)
+
+                // Remove notification entity from firebase
+                dataSnapShot?.ref?.removeValue()
 
             }
 
@@ -45,50 +77,30 @@ class MainPresenter : BaseMvpPresenterImpl<MainContract.View>(), MainContract.Pr
             }
 
         })
-        /*testRef.addValueEventListener(object: ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot?) {
-                for (child in dataSnapshot?.children!!) {
-                    val label = child?.child("label")?.getValue(String::class.java)
-                    Timber.d(label)
 
-                    MyNotification.createNotification(view?.getContext(),
-                            "Alarm",
-                            label)
-
-                    val realm = Realm.getDefaultInstance()
-
-                    realm.beginTransaction()
-
-                    val alarmRealm = realm.createObject(MyAlarm::class.java).apply {
-                        title = "Alarm"
-                        message = label
-                        time = System.currentTimeMillis()
-                        icon = R.drawable.announcement
-                    }
-
-                    realm.commitTransaction()
-
-                }
-
-            }
-
-            override fun onCancelled(p0: DatabaseError?) {
-                Timber.e("testRefCancelled")
-            }
-
-        })*/
     }
 
-    override fun loadAllAlarms() {
-        Observable.just(Realm.getDefaultInstance())
-                .subscribeOn(Schedulers.io())
-                .subscribe ({
-                    val results = it.where(MyAlarm::class.java)
-                            .findAll()
-                    for (result in results) {
-                        Timber.d(result.toString())
-                    }
+    override fun loadAllAlarms(cursor: Cursor?) {
+        Timber.d("load all alarms")
+        view?.showLoading()
+        Observable.timer(2L, TimeUnit.SECONDS)
+                .subscribe({
+                    val alarmList = ArrayList<Alarm>()
+                    if (cursor?.count != null)
+                        for (i in 0 until cursor.count) {
+                            cursor.moveToPosition(i)
+                            val id = cursor.getString(COL_ID)
+                            val title = cursor.getString(COL_TITLE)
+                            val message = cursor.getString(COL_MESSAGE)
+                            val date = cursor.getString(COL_DATE)
+
+                            val alarm = Alarm(id, title, message, date)
+                            alarmList.add(alarm)
+                        }
+                    view?.showListOfAlarms(alarmList)
                 }, { view?.showError(it.toString()); Timber.e(it.toString()) })
 
     }
+
+    fun Double.cutTo2DecimalPlaces() = BigDecimal(this).setScale(2, BigDecimal.ROUND_HALF_DOWN).toDouble()
 }

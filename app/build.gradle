@@ -47,6 +47,10 @@ dependencies {
     implementation 'com.mindorks:placeholderview:0.7.2'
     implementation 'com.google.firebase:firebase-database:11.8.0'
 
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+
+    implementation 'com.airbnb.android:lottie:2.5.0-beta3'
+
     // Schematic dependencies for ContentProvider
     kapt 'net.simonvt.schematic:schematic-compiler:0.6.3'
     implementation 'net.simonvt.schematic:schematic:0.6.3'
