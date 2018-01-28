@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">mEar</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="channel_name">mEar</string>
+    <string name="channel_description">Alarms</string>
+    <string name="mear_channel_id">mear_channel_01</string>
+</resources>

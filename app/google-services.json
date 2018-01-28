@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "228383183267",
+    "firebase_url": "https://conuhacks2018-mear.firebaseio.com",
+    "project_id": "conuhacks2018-mear",
+    "storage_bucket": "conuhacks2018-mear.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:228383183267:android:df8cfbea493b2d23",
+        "android_client_info": {
+          "package_name": "com.dan190.mear"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "228383183267-1l8l2okkqrco9ibs0idpug9lotr7o5o9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dan190.mear",
+            "certificate_hash": "7c9cfc73d957a3f603ff6586b4e8aabd8288a98d"
+          }
+        },
+        {
+          "client_id": "228383183267-s9pr46i0cnu96rq4ck1r11pro30qqp61.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKMND2ISwFXdpm3BlZTf3u77Ny1wEOeBU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "228383183267-s9pr46i0cnu96rq4ck1r11pro30qqp61.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
